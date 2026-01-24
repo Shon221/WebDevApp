@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const sessionMiddleware = require("./config/session");
 const authRoutes = require("./routes/authRoutes");
 const videoRoutes = require("./routes/videoRoutes");
@@ -18,6 +19,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// cookie parser
+app.use(cookieParser());
+
 // static files
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -30,9 +34,15 @@ app.use(sessionMiddleware);
 
 // make user available in views
 app.use((req, res, next) => {
+    console.log('===== REQUEST START =====');
+    console.log('Path:', req.path);
+    console.log('Cookie sessionId:', req.cookies?.sessionId);
+    console.log('req.sessionID:', req.sessionID);
+    console.log('req.session.user:', req.session.user);
     res.locals.user = req.session.user || null;
     next();
 });
+
 
 // routes
 app.use(authRoutes);
@@ -49,5 +59,5 @@ app.use((req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT} updated...`));

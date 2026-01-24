@@ -4,6 +4,9 @@ const path = require("path");
 const dbPath = path.join(__dirname, "..", "db.sqlite");
 const db = new sqlite3.Database(dbPath);
 
+// Enable foreign keys
+db.run("PRAGMA foreign_keys = ON");
+
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS Users (

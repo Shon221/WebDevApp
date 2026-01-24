@@ -43,11 +43,16 @@ class FavoriteRepository {
 
     async delete(id, userId) {
         return new Promise((resolve, reject) => {
+            console.log('Deleting favorite ID:', id, 'for user:', userId);
             db.run(
                 `DELETE FROM Favorites WHERE id = ? AND userId = ?`,
                 [id, userId],
                 function (err) {
-                    if (err) return reject(err);
+                    if (err) {
+                        console.error('Delete error:', err);
+                        return reject(err);
+                    }
+                    console.log('Rows deleted:', this.changes);
                     resolve(this.changes > 0);
                 }
             );
